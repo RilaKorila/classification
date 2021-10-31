@@ -255,7 +255,6 @@ def vis():
     feature_data = load_num_data()
     full_data = load_full_data()
     label = feature_data.columns
-    print(label)
 
     st.sidebar.markdown('## 様々なグラフを試してみよう')
 
@@ -274,21 +273,16 @@ def vis():
             bar_val = st.selectbox('変数を選択',label)
             logging.info(',%s,棒グラフ,%s', st.session_state.username, bar_val)
 
-
             # Submitボタン
             plot_button = st.form_submit_button('グラフ表示')
             if plot_button:
-                # g = sns.catplot(x=hist_val, y='Species', data=full_data, kind='bar', ci=None)
-                # g = g.set_ylabels("survival probability")
-                # g = sns.factorplot(data = full_data, x = hist_val, y = 'Species', kind = 'bar',  ci=None)
-                # st.pyplot(g)
                 fig = px.bar(full_data, x='Species', y=bar_val, color=full_data.Species)
                 st.plotly_chart(fig, use_container_width=True)
 
         # コードの表示
         code = st.sidebar.checkbox('コードを表示')
         if code:
-            code_txt = "g = sns.catplot(x='" + bar_val + "', y='Species', kind='bar', data=full_data, ci=None)"
+            code_txt = "fig = px.bar(full_data, x='Species', y=" + bar_val + ", color=full_data.Species)"
             st.sidebar.markdown('---')
             st.sidebar.write(code_txt)
             st.sidebar.markdown('---')
@@ -301,19 +295,16 @@ def vis():
             box_val_y = st.selectbox('箱ひげ図にする変数を選択',label)
             logging.info(',%s,箱ひげ図,%s', st.session_state.username, box_val_y)
 
-
             # Submitボタン
             plot_button = st.form_submit_button('グラフ表示')
             if plot_button:
                 # 箱ひげ図の表示
-                # g = sns.catplot(x='Species', y=box_val_y, data=full_data, kind='box')
-                # st.pyplot(g)
                 fig = px.box(full_data, x='Species', y=box_val_y, color=full_data.Species)
                 st.plotly_chart(fig, use_container_width=True)
                 # コードの表示
         code = st.sidebar.checkbox('コードを表示')
         if code:
-            code_txt = "g = sns.catplot(x='Species', y='" + box_val_y + "', data=full_data, kind='box')"
+            code_txt = "fig = px.box(full_data, x='Species', y=" + box_val_y + ", color=full_data.Species)"
             st.sidebar.markdown('---')
             st.sidebar.markdown(code_txt)
             st.sidebar.markdown('---')
@@ -332,25 +323,20 @@ def vis():
                 y_label = st.selectbox('縦軸を選択',label)
             
             logging.info(',%s,散布図,%s', st.session_state.username, x_label+'_'+y_label)
-            
-        
+                
             # Submitボタン
             plot_button = st.form_submit_button('グラフ表示')
             if plot_button:
                 # 散布図表示
-                # fig = px.scatter(full_data,x=x_label,y=y_label)
-                # st.plotly_chart(fig, use_container_width=True)
                 fig = px.scatter(data_frame=full_data, x=x_label, y=y_label, color=full_data.Species)
-                # g = sns.jointplot(x=x_label, y=y_label, data=full_data, color="Species")
-                # st.pyplot(g)
                 st.plotly_chart(fig, use_container_width=True)
 
         # コードの表示
         code = st.sidebar.checkbox('コードを表示')
         if code:
-            code_txt = "g = sns.catplot(x='" +  x_label + "', y='" + y_label + "', data=full_data, kind = 'swarm')"
+            code_txt = "fig = px.scatter(data_frame=full_data, x=" + x_label + ", y=" + y_label + ", color=full_data.Species)"
             st.sidebar.markdown('---')
             st.sidebar.write(code_txt)
             st.sidebar.markdown('---')
- 
+
 main()

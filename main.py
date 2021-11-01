@@ -3,9 +3,9 @@ import plotly.express as px
 import pandas as pd
 import logging
 import data as d
-from sklearn.metrics import accuracy_score
+# from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
-import time
+# import time
 
 
 st.set_page_config(

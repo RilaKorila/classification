@@ -1,10 +1,9 @@
-from numpy.core.numeric import full
 import streamlit as st
 import plotly.express as px
 import pandas as pd
 import logging
+import data as d
 from sklearn.metrics import accuracy_score
-import seaborn as sns
 from sklearn.tree import DecisionTreeClassifier
 import time
 
@@ -79,7 +78,9 @@ def main():
 
     # --- page選択ラジオボタン
     st.sidebar.markdown('## ページを選択')
-    page = st.sidebar.radio('', ('データ可視化', 'テストデータ', '決定木'))
+    # page = st.sidebar.radio('', ('データ可視化', 'テストデータ', '決定木'))
+    page = st.sidebar.radio('', ('データ可視化', '決定木'))
+
     # if page == 'データ加工':
     #     st.session_state.page = 'deal_data'
     #     logging.info(',%s,ページ選択,%s', st.session_state.username, page)
@@ -174,7 +175,7 @@ def test():
 
 # ---------------- 決定木 : dtreeviz ----------------------------------
 def decision_tree():
-    st.title("生存できるか予測しよう")
+    st.title("分類を予測しよう")
     
     st.write('予測に使う変数を2つ選ぼう')
     left, right = st.beta_columns(2)
@@ -190,29 +191,29 @@ def decision_tree():
     if not started: 
         st.stop()
     
-    # データの取得
-    train_X, test_X, train_y, test_y = load_ML_data(feature1, feature2, train_num = 600)
+    # # データの取得
+    # train_X, test_X, train_y, test_y = load_ML_data(feature1, feature2, train_num = 600)
 
-    # 木の深さを3に制限
-    clf = DecisionTreeClassifier(random_state=0, max_depth=3)
-    # 学習
-    clf = clf.fit(train_X, train_y)
+    # # 木の深さを3に制限
+    # clf = DecisionTreeClassifier(random_state=0, max_depth=3)
+    # # 学習
+    # clf = clf.fit(train_X, train_y)
 
-    # test_Xデータを全部予測する
-    pred = clf.predict(test_X)
-    # 正解率を計算する
-    acc = accuracy_score(pred, test_y)
+    # # test_Xデータを全部予測する
+    # pred = clf.predict(test_X)
+    # # 正解率を計算する
+    # acc = accuracy_score(pred, test_y)
 
-    st.success('学習終了！！')
-    st.write(f'accuracy: {acc:.5f}')
+    # st.success('学習終了！！')
+    # st.write(f'accuracy: {acc:.5f}')
 
-    #　決定木の表示までにタイムラグがほしい
-    # 待たせられる
-    with st.spinner('Wait for it...'):
-        time.sleep(3.5)
+    # #　決定木の表示までにタイムラグがほしい
+    # # 待たせられる
+    # with st.spinner('Wait for it...'):
+    #     time.sleep(3.5)
 
     # 決定木の可視化
-    tree = data.my_dtree(feature1, feature2)
+    tree = d.my_dtree(feature1, feature2)
     st.image(tree, caption=feature1+'_'+feature2)
 
     # if vis_tree:

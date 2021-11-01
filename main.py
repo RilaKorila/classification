@@ -3,6 +3,8 @@ import plotly.express as px
 import pandas as pd
 import logging
 import data as d
+from sklearn.model_selection import train_test_split
+from dtreeviz.trees import dtreeviz
 # from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 # import time
@@ -191,63 +193,32 @@ def decision_tree():
     if not started: 
         st.stop()
     
-    # # データの取得
-    # train_X, test_X, train_y, test_y = load_ML_data(feature1, feature2, train_num = 600)
-
-    # # 木の深さを3に制限
-    # clf = DecisionTreeClassifier(random_state=0, max_depth=3)
-    # # 学習
-    # clf = clf.fit(train_X, train_y)
-
-    # # test_Xデータを全部予測する
-    # pred = clf.predict(test_X)
-    # # 正解率を計算する
-    # acc = accuracy_score(pred, test_y)
-
-    # st.success('学習終了！！')
-    # st.write(f'accuracy: {acc:.5f}')
-
-    # #　決定木の表示までにタイムラグがほしい
-    # # 待たせられる
-    # with st.spinner('Wait for it...'):
-    #     time.sleep(3.5)
-
     # 決定木の可視化
     tree = d.my_dtree(feature1, feature2)
     st.image(tree, caption=feature1+'_'+feature2)
 
-    # if vis_tree:
-    #     viz = dtreeviz(
-    #             clf,
-    #             train_X, 
-    #             train_y,
-    #             target_name='Species',
-    #             feature_names=train_X.columns,
-    #             class_names=['Alive', 'Dead'],
-    #         ) 
+    # df = load_full_data()
+    # X = df[[feature1, feature2]]
+    # y = df.Species
 
-    #     viz.view()
-    # st.set_option('deprecation.showPyplotGlobalUse', False)
+    # y = y.replace("Iris-setosa", 0)
+    # y = y.replace("Iris-versicolor", 1)
+    # y = y.replace("Iris-virginica", 2)
 
-    # viz = dtreeviz(
-    #             clf,
-    #             train_X, 
-    #             train_y,
-    #             target_name='Species',
-    #             feature_names=train_X.columns,
-    #             class_names=['Alive', 'Dead'],
-    #         ) 
-    # st.write("viz OK")
+    # データの取得
+    # 学習データとテストデータに分割
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=3)
 
-    # viz.view()
-    # st.image(viz._repr_svg_(), use_column_width=True)
-    # def st_dtree(viz, height=None):
-    #     dtree_html = f"<body>{viz.svg()}</body>"
-    #     components.html(dtree_html, height=height)
+    # # 木の深さを3に制限
+    # clf = DecisionTreeClassifier(random_state=0, max_depth=3)
+    # # 学習
+    # clf = clf.fit(X_train, y_train)
 
-    # st_dtree(viz, 800)
-    # st.write('end of code')
-    # st.image(viz._repr_svg_(), use_column_width=True)
+    # viz = dtreeviz(clf, X_train, y_train,
+    #                 target_name='Species',
+    #                 feature_names=[feature1, feature2],
+    #                 class_names=['setosa', 'versicolor','virginica']) 
+    # st.image(viz.save_svg(), caption=feature1+'_'+feature2)
 
 # ---------------- 可視化 :  各グラフを選択する ----------------------------------
 def vis():

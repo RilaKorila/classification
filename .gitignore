@@ -1,1 +1,2 @@
-data/
+data/iris.csv
+__pycache__/

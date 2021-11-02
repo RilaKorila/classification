@@ -3,8 +3,6 @@ import plotly.express as px
 import pandas as pd
 import logging
 import data as d
-from sklearn.model_selection import train_test_split
-from dtreeviz.trees import dtreeviz
 # from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 # import time
@@ -196,29 +194,6 @@ def decision_tree():
     # 決定木の可視化
     tree = d.my_dtree(feature1, feature2)
     st.image(tree, caption=feature1+'_'+feature2)
-
-    # df = load_full_data()
-    # X = df[[feature1, feature2]]
-    # y = df.Species
-
-    # y = y.replace("Iris-setosa", 0)
-    # y = y.replace("Iris-versicolor", 1)
-    # y = y.replace("Iris-virginica", 2)
-
-    # データの取得
-    # 学習データとテストデータに分割
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=3)
-
-    # # 木の深さを3に制限
-    # clf = DecisionTreeClassifier(random_state=0, max_depth=3)
-    # # 学習
-    # clf = clf.fit(X_train, y_train)
-
-    # viz = dtreeviz(clf, X_train, y_train,
-    #                 target_name='Species',
-    #                 feature_names=[feature1, feature2],
-    #                 class_names=['setosa', 'versicolor','virginica']) 
-    # st.image(viz.save_svg(), caption=feature1+'_'+feature2)
 
 # ---------------- 可視化 :  各グラフを選択する ----------------------------------
 def vis():

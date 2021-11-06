@@ -6,7 +6,7 @@ import data as d
 # from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 # import time
-
+from sklearn.model_selection import train_test_split
 
 st.set_page_config(
     page_title="Classification App",
@@ -78,18 +78,17 @@ def main():
 
     # --- page選択ラジオボタン
     st.sidebar.markdown('## ページを選択')
-    # page = st.sidebar.radio('', ('データ可視化', 'テストデータ', '決定木'))
-    page = st.sidebar.radio('', ('データ可視化', '決定木'))
+    page = st.sidebar.radio('', ('分類', 'データ可視化', '決定木'))
 
-    # if page == 'データ加工':
-    #     st.session_state.page = 'deal_data'
-    #     logging.info(',%s,ページ選択,%s', st.session_state.username, page)
-    if page == 'データ可視化':
+    if page == '分類':
+        st.session_state.page = 'classfy'
+        logging.info(',%s,分類,%s', st.session_state.username, page)
+    elif page == 'データ可視化':
         st.session_state.page = 'vis'
         logging.info(',%s,ページ選択,%s', st.session_state.username, page)
-    elif page == 'テストデータ':
-        st.session_state.page = 'test'
-        logging.info(',%s,ページ選択,%s', st.session_state.username, page)
+    # elif page == 'テストデータ':
+    #     st.session_state.page = 'test'
+    #     logging.info(',%s,ページ選択,%s', st.session_state.username, page)
     elif page == '決定木':
         st.session_state.page = 'decision_tree'
         logging.info(',%s,ページ選択,%s', st.session_state.username, page)
@@ -97,12 +96,12 @@ def main():
     # --- page振り分け
     if st.session_state.page == 'input_name':
         input_name()
-    # elif st.session_state.page == 'deal_data':
-    #     deal_data()
+    elif st.session_state.page == 'classfy':
+        classfy()
     elif st.session_state.page == 'vis':
         vis()
-    elif st.session_state.page == 'test':
-        test()  
+    # elif st.session_state.page == 'test':
+    #     test()  
     elif st.session_state.page == 'decision_tree':
         decision_tree()        
 
@@ -126,52 +125,34 @@ def input_name():
 #     st.title("deal_data")
 
 # ---------------- テストデータ　プロット ----------------------------------
-def test():
-    st.title('テストデータ')
-    test_idx = st.number_input("データ番号を入力(0~200)", min_value=0, max_value=200)
+def classfy():
+    st.title('分類させてみる')
+    test_idx = st.number_input("データ番号を入力(0~2)", min_value=0, max_value=2)
 
     # テストデータを取得
-    full_data = load_full_data()
-    test_num = 200
-    # test_numまでがテストデータ = 分割後もindexが揃う
-    train = full_data[test_num:]
-    # test_num以降が訓練データ
-    test = full_data[:test_num]
-    train.drop('Species', axis=1) 
-    
-    # テストデータを取得
-    test_df = full_data[test_idx: test_idx+1].drop('Species', axis=1)
-    # 選択したデータの表示
+    test_data = [[4.4,2.9,1.4,0.2,"setosa"], [6.4,2.9,4.3,1.3,"versicolor"], [5.9,3,5.1,1.8,"virginica"]]
+    test_df = pd.DataFrame(test_data,columns=['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm','Species'])
     st.dataframe(test_df)
+
+    full_data = load_full_data()
+    # test_numまでがテストデータ = 分割後もindexが揃う
+    train, _ = train_test_split(full_data, test_size=0.3)
+    train_X = train[["PetalWidthCm", "PetalLengthCm"]]
+    train_y = train[["Species"]]
 
     # 学習
     # ここでは決定木を用います
     clf = DecisionTreeClassifier(random_state=0, max_depth=3)
-    train_X = train.drop('Species', axis=1)
-    train_y = train.Species
     clf = clf.fit(train_X, train_y)
-    # コンピューターの予測結果  # 1が生存、0が死亡
-    pred = clf.predict(test_df)
+    # コンピューターの予測結果 
+    tmp = test_df.copy()
+    tmp = tmp.drop('Species', axis=1)
+    pred = clf.predict(tmp[["PetalWidthCm", "PetalLengthCm"]])
 
     pred_btn = st.checkbox('予測結果をみる')
     if pred_btn:
         st.write('\n機械学習による予測結果は...')
-        if pred[0] == 1:
-            st.success('生存！！')
-        else:
-            st.success('亡くなってしまうかも...')
-        
-        # その後、正解を見る
-        ans = st.checkbox('正解をみる')
-        if ans:
-            st.write('\n実際は...')
-            if test['Species'][test_idx] == 1:
-                st.success('生存！！')
-            else:
-                st.success('亡くなってしまった...')
-
-            test[test_idx: test_idx+1]
-
+        st.success(pred[test_idx: test_idx+1])
 
 # ---------------- 決定木 : dtreeviz ----------------------------------
 def decision_tree():

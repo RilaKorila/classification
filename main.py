@@ -3,7 +3,7 @@ import plotly.express as px
 import pandas as pd
 import logging
 import data as d
-# from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 # import time
 from sklearn.model_selection import train_test_split
@@ -127,15 +127,18 @@ def input_name():
 # ---------------- テストデータ　プロット ----------------------------------
 def classfy():
     st.title('分類させてみる')
-    test_idx = st.number_input("データ番号を入力(0~2)", min_value=0, max_value=2)
 
     # テストデータを取得
+    st.markdown("### あやめ　のデータ")
     test_data = [[4.4,2.9,1.4,0.2,"setosa"], [6.4,2.9,4.3,1.3,"versicolor"], [5.9,3,5.1,1.8,"virginica"]]
     test_df = pd.DataFrame(test_data,columns=['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm','Species'])
     st.dataframe(test_df)
 
+    # テストデータ番号の習得
+    st.markdown("---")
+    test_idx = st.number_input("データ番号を入力(0~2)", min_value=0, max_value=2)
+
     full_data = load_full_data()
-    # test_numまでがテストデータ = 分割後もindexが揃う
     train, _ = train_test_split(full_data, test_size=0.3)
     train_X = train[["PetalWidthCm", "PetalLengthCm"]]
     train_y = train[["Species"]]
@@ -172,6 +175,24 @@ def decision_tree():
     if not started: 
         st.stop()
     
+    full_data = load_full_data()
+    train, test = train_test_split(full_data, test_size=0.3)
+    train_X = train[[feature1, feature2]]
+    train_y = train[["Species"]]
+    test_X = test[[feature1, feature2]]
+    test_y = test[["Species"]]
+
+
+    # 学習
+    # ここでは決定木を用います
+    clf = DecisionTreeClassifier(random_state=0, max_depth=3)
+    clf = clf.fit(train_X, train_y)
+    # コンピューターの予測結果 
+    pred = clf.predict(test_X)
+
+    # 精度
+    acc = accuracy_score(test_y, pred)
+    st.write("精度は... " + str(round(acc*100, 2)) + "% !!")
     # 決定木の可視化
     tree = d.my_dtree(feature1, feature2)
     st.image(tree, caption=feature1+'_'+feature2)

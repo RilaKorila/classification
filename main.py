@@ -147,27 +147,27 @@ def classfy():
     # ここでは決定木を用います
     clf = DecisionTreeClassifier(random_state=0, max_depth=3)
     clf = clf.fit(train_X, train_y)
-    # コンピューターの予測結果 
+    # コンピューターの分類結果 
     tmp = test_df.copy()
     tmp = tmp.drop('Species', axis=1)
     pred = clf.predict(tmp[["PetalWidthCm", "PetalLengthCm"]])
 
-    pred_btn = st.checkbox('予測結果をみる')
+    pred_btn = st.checkbox('分類結果をみる')
     if pred_btn:
-        st.write('\n機械学習による予測結果は...')
+        st.write('\n機械学習による分類結果は...')
         st.success(pred[test_idx: test_idx+1])
 
 # ---------------- 決定木 : dtreeviz ----------------------------------
 def decision_tree():
-    st.title("分類を予測しよう")
+    st.title("分類しよう")
     
-    st.write('予測に使う変数を2つ選ぼう')
+    st.write('分類に使う変数を2つ選ぼう')
     left, right = st.beta_columns(2)
     features = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
     with left:
-        feature1 = st.selectbox('予測に使う変数1',features)
+        feature1 = st.selectbox('分類に使う変数1',features)
     with right:
-        feature2 = st.selectbox('予測に使う変数2',features)
+        feature2 = st.selectbox('分類に使う変数2',features)
 
     logging.info(',%s,決定木変数,%s', st.session_state.username, feature1+'_'+feature2)
     # 学習スタート
@@ -187,7 +187,7 @@ def decision_tree():
     # ここでは決定木を用います
     clf = DecisionTreeClassifier(random_state=0, max_depth=3)
     clf = clf.fit(train_X, train_y)
-    # コンピューターの予測結果 
+    # コンピューター分類結果 
     pred = clf.predict(test_X)
 
     # 精度
